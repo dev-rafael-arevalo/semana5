@@ -69,7 +69,7 @@ El sistema convierte los tres casos en **un mismo registro** comparable y sumabl
 | Interfaz interactiva (no solo prints) | CLI con menús, filtros y paginación, más una **web en Flask** | [`src/interfaz_cli.py`](src/interfaz_cli.py), [`src/interfaz_web.py`](src/interfaz_web.py) |
 | Separación de responsabilidades | Un módulo por responsabilidad; las interfaces solo presentan | [`src/`](src/) |
 | Archivo de reglas o configuración | Todo lo configurable vive fuera del código | [`config/reglas.json`](config/reglas.json) |
-| Nota técnica (máx. 1 página) | Decisiones de diseño, uso de IA y ajustes | [`NOTA_TECNICA.md`](NOTA_TECNICA.md) |
+| Nota técnica (máx. 1 página) | Decisiones de diseño, uso de IA y ajustes | [`NOTA_TECNICA.docx`](NOTA_TECNICA.docx) · [`.md`](NOTA_TECNICA.md) |
 | Datos de prueba válidos e inconsistentes | 12 válidos, 22 inconsistentes y 1 archivo mixto | [`data/`](data/) |
 
 ---
@@ -324,27 +324,38 @@ USD       1,358.89     1,820.00         8.99        75.25     1,283.64
 
 ### 1. CLI interactiva — `python main.py`
 
-```text
-Explorador de transacciones multifuente
-=======================================
-  Archivo : data/transacciones.json
-  Cargadas: 34  |  13 válidas  |  21 inválidas  |  política: separar
-
-  1. Ver métricas
-  2. Listar transacciones (con filtros)
-  3. Ver transacciones inválidas y sus motivos
-  4. Configurar filtros
-  5. Buscar transacción por ID (original vs normalizada)
-  6. Exportar resultados (JSON / CSV)
-  7. Ver reglas activas
-  8. Cargar otro archivo
-  0. Salir
-```
+<p align="center"><img src="docs/capturas/cli_menu.png" alt="Menú principal de la CLI" width="760"></p>
 
 - Tablas **paginadas** (`[s]iguiente`, `[a]nterior`, `[d]etalle #`).
 - Filtros **combinables**: fuente, estado, moneda, rango de fechas, rango de montos, texto libre y ordenamiento.
 - Gráfico de barras por estado y colores ANSI (se desactivan con `NO_COLOR=1`).
 - Exportación a la carpeta `salida/`.
+
+<details open>
+<summary><b>📸 Capturas de la CLI</b></summary>
+
+#### Métricas
+Conteo por estado con barras, totales por moneda desglosados por estado, conteo por fuente y motivos de invalidez.
+
+<img src="docs/capturas/cli_metricas.png" alt="Métricas en la CLI" width="760">
+
+#### Transacciones inválidas
+Cada registro inválido se muestra en rojo con sus códigos de error debajo. La tabla está paginada.
+
+<img src="docs/capturas/cli_invalidas.png" alt="Listado de inválidas en la CLI" width="760">
+
+#### Filtros y listado filtrado
+Filtro por moneda `USD` y orden por monto descendente: coinciden 10 de 13 transacciones válidas.
+
+<img src="docs/capturas/cli_filtros.png" alt="Configuración de filtros en la CLI" width="760">
+<img src="docs/capturas/cli_listado.png" alt="Listado filtrado en la CLI" width="760">
+
+#### Detalle: registro original vs. normalizado
+Búsqueda por ID. Se ve por qué la transacción es inválida y qué nota dejó el normalizador.
+
+<img src="docs/capturas/cli_detalle.png" alt="Detalle de transacción en la CLI" width="760">
+
+</details>
 
 ### 2. Interfaz web — `python web.py`
 
@@ -358,6 +369,28 @@ Explorador de transacciones multifuente
 | Barra superior | Búsqueda por ID, **carga de JSON** desde el navegador, descarga en **JSON / CSV** |
 
 Los estilos son propios y no usan CDN, así que funciona sin conexión a internet.
+
+<details open>
+<summary><b>📸 Capturas de la interfaz web</b></summary>
+
+#### Panel de métricas
+<img src="docs/capturas/web_metricas.png" alt="Panel de métricas en la web" width="900">
+
+#### Listado con filtros
+Moneda `USD`, ordenado por monto descendente. Los estados se distinguen por color.
+
+<img src="docs/capturas/web_transacciones.png" alt="Listado de transacciones con filtros" width="900">
+
+#### Transacciones inválidas
+<img src="docs/capturas/web_invalidas.png" alt="Listado de transacciones inválidas" width="900">
+
+#### Detalle: original vs. normalizado
+<img src="docs/capturas/web_detalle.png" alt="Detalle de una transacción inválida" width="900">
+
+#### Reglas activas
+<img src="docs/capturas/web_reglas.png" alt="Vista de reglas activas" width="900">
+
+</details>
 
 ---
 
@@ -418,20 +451,21 @@ python -m unittest discover -s tests -t . -v
 
 ## 🤖 Uso de IA
 
-De acuerdo con las condiciones de la actividad:
+Se usó **Claude** como asistente de código, de acuerdo con las condiciones de la actividad:
 
-| La IA se usó para | Lo decidió el estudiante |
+| La IA se usó para | Revisión y decisión del estudiante |
 |---|---|
-| Proponer la estructura de módulos | El **esquema** final de datos |
-| Escribir la lógica de parsing de montos y fechas | Las **reglas** de normalización |
-| Construir la CLI y la interfaz web | Los **criterios** de validez y descarte |
-| Generar datos de prueba y pruebas unitarias | La política para las inválidas |
+| Proponer la estructura de módulos | Aprobé la separación en normalización, validación, métricas e interfaz |
+| Escribir la lógica de parsing de montos y fechas | Verifiqué el comportamiento con las pruebas y los datos inconsistentes |
+| Proponer una primera versión de las reglas | Revisé cada criterio y decidí mantener el **monto máximo de 50,000**, **rechazar BTC y colones** y la política **`separar`** |
+| Construir la CLI y la interfaz web | Elegí Flask en lugar de Streamlit por compatibilidad con Python 3.15 |
+| Generar datos de prueba y pruebas unitarias | Las pruebas detectaron errores que se corrigieron (ver la nota técnica) |
 
-Las decisiones del estudiante están en [`config/reglas.json`](config/reglas.json) y justificadas
-en [`NOTA_TECNICA.md`](NOTA_TECNICA.md), donde también se documentan los **ajustes hechos a
-las sugerencias de la IA**. Por ejemplo, se corrigió la detección de fuentes, que clasificaba como
-desconocidos los registros con campos `null`; el error salió a la luz en las pruebas
-automáticas.
+Las reglas están en [`config/reglas.json`](config/reglas.json), con la justificación de cada
+decisión en sus comentarios. La nota técnica ([`.docx`](NOTA_TECNICA.docx) · [`.md`](NOTA_TECNICA.md))
+documenta los **ajustes hechos a las sugerencias de la IA**. Por ejemplo, se corrigió la detección
+de fuentes, que clasificaba como desconocidos los registros con campos `null`; el error salió a la
+luz en las pruebas automáticas.
 
 ---
 
@@ -443,6 +477,9 @@ semana5/
 ├── web.py                      # Entrada: interfaz web (Flask)
 ├── requirements.txt            # Solo Flask (para la web)
 ├── NOTA_TECNICA.md             # Decisiones de diseño y uso de IA
+├── NOTA_TECNICA.docx           # Misma nota en formato Word (entregable, 1 página)
+│
+├── docs/capturas/              # Capturas de pantalla usadas en este README
 │
 ├── config/
 │   └── reglas.json             # ⚙️ Reglas: fuentes, monedas, estados, fechas, validación

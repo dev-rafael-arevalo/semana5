@@ -18,9 +18,10 @@
     <h2>Monedas</h2>
     <p>Soportadas: {% for m in reglas.monedas_soportadas %}<span class="chip verde">{{ m }}</span> {% endfor %}</p>
     <table>
-      <thead><tr><th>Alias de origen</th><th>Código</th></tr></thead>
-      {% for alias, codigo in reglas.alias_moneda.items() %}
-        <tr><td><code>{{ alias }}</code></td><td>{{ codigo }}</td></tr>
+      <thead><tr><th>Código</th><th>Alias de origen aceptados</th></tr></thead>
+      {% for codigo, grupo in reglas.alias_moneda.items()|groupby(1) %}
+        <tr><td><strong>{{ codigo }}</strong></td>
+            <td>{% for alias, _ in grupo %}<code>{{ alias }}</code> {% endfor %}</td></tr>
       {% endfor %}
     </table>
   </section>

@@ -79,7 +79,7 @@ def _recortar(texto: str, ancho: int) -> str:
 
 
 def imprimir_tabla(transacciones: list[Transaccion], desde: int = 0) -> None:
-    encabezado = "  #  " + " ".join(n.ljust(a) for n, a in COLUMNAS)
+    encabezado = "  #  " + " ".join(n.rjust(a) if n == "Monto" else n.ljust(a) for n, a in COLUMNAS)
     print(negrita(encabezado))
     print("-" * len(encabezado))
     for i, tx in enumerate(transacciones, desde + 1):

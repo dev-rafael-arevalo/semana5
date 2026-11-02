@@ -8,6 +8,7 @@
     "offset_horas": -6
   },
 
+  "_decision_monedas": "Se rechazan BTC y colones (SVC): el colón ya no circula desde la dolarización de 2001 y BTC es muy volátil; aceptarlo obligaría a manejar tipos de cambio.",
   "monedas_soportadas": ["USD", "EUR", "GTQ", "MXN"],
 
   "alias_moneda": {
@@ -90,6 +91,7 @@
     "_comentario": "Criterios de validez. Una transacción con al menos un error es INVÁLIDA.",
     "campos_obligatorios": ["id", "fecha", "monto", "moneda", "estado"],
     "monto_minimo": 0.01,
+    "_decision_monto_maximo": "50,000 cubre con margen las operaciones normales de las tres fuentes; un monto mayor es atípico y se revisa aparte.",
     "monto_maximo": 50000.00,
     "permitir_fecha_futura": false,
     "fecha_minima": "2020-01-01",
@@ -98,6 +100,7 @@
 
   "politica_invalidas": {
     "_comentario": "Opciones: 'separar' (se guardan aparte con sus motivos), 'marcar' (quedan en la lista principal con valida=false), 'descartar' (se eliminan, solo se cuentan).",
+    "_decision": "Se eligió separar para no perder información: las inválidas quedan disponibles, con su motivo, para corregirlas en la fuente.",
     "accion": "separar"
   }
 }
