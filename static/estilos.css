@@ -1,0 +1,102 @@
+:root {
+  --fondo: #f5f6f8; --panel: #fff; --borde: #e2e5ea; --texto: #1f2430; --tenue: #6b7280;
+  --acento: #2f5bea; --verde: #15803d; --verde-bg: #dcfce7; --rojo: #b91c1c; --rojo-bg: #fee2e2;
+  --ambar: #a16207; --ambar-bg: #fef3c7; --gris-bg: #eef0f3;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+       background: var(--fondo); color: var(--texto); }
+a { color: var(--acento); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1 { font-size: 22px; margin: 0 0 16px; display: flex; align-items: center; gap: 10px; }
+h2 { font-size: 15px; margin: 0 0 12px; }
+small { color: var(--tenue); font-weight: normal; font-size: 13px; }
+code { background: var(--gris-bg); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+pre { background: #0f172a; color: #e2e8f0; padding: 14px; border-radius: 8px; overflow: auto;
+      font-size: 13px; margin: 0; }
+
+/* Barra superior */
+.barra { display: flex; align-items: center; gap: 24px; padding: 0 24px; height: 56px;
+         background: #111827; color: #fff; }
+.marca { font-weight: 700; }
+.barra nav { display: flex; gap: 4px; flex: 1; }
+.barra nav a { color: #cbd5e1; padding: 8px 12px; border-radius: 6px; }
+.barra nav a:hover { background: #1f2937; text-decoration: none; }
+.barra nav a.activo { background: #374151; color: #fff; }
+.buscar input { padding: 7px 10px; border-radius: 6px; border: 1px solid #374151;
+                background: #1f2937; color: #fff; width: 200px; }
+
+.estado-archivo { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+                  gap: 12px; padding: 10px 24px; background: var(--panel); border-bottom: 1px solid var(--borde); }
+.acciones, .cargar { display: flex; gap: 8px; align-items: center; }
+
+main { padding: 24px; max-width: 1280px; margin: 0 auto; }
+
+/* Componentes */
+.panel { background: var(--panel); border: 1px solid var(--borde); border-radius: 10px;
+         padding: 18px; margin-bottom: 20px; }
+.panel.sin-relleno { padding: 0; overflow-x: auto; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
+.rejilla > .panel { margin-bottom: 20px; }
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.tarjeta { background: var(--panel); border: 1px solid var(--borde); border-radius: 10px; padding: 16px;
+           display: flex; flex-direction: column; }
+.tarjeta .etiqueta { color: var(--tenue); font-size: 13px; }
+.tarjeta .valor { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tarjeta .sub { color: var(--tenue); font-size: 12px; }
+
+button, .boton { background: var(--acento); color: #fff; border: 0; border-radius: 6px; padding: 7px 14px;
+                 font: inherit; cursor: pointer; display: inline-block; }
+.boton.secundario { background: var(--panel); color: var(--texto); border: 1px solid var(--borde); }
+button:hover, .boton:hover { filter: brightness(0.95); text-decoration: none; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; color: var(--tenue); font-weight: 600; font-size: 12px; text-transform: uppercase;
+     letter-spacing: .03em; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+.tabla-datos tbody tr:hover { background: #f8fafc; }
+.fila-invalida { background: #fff7f7; }
+.der { text-align: right; }
+.num-tab { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.recorte { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vacio { text-align: center; color: var(--tenue); padding: 30px; }
+.nota, .pequeno { color: var(--tenue); font-size: 12px; }
+.txt-verde { color: var(--verde); } .txt-rojo { color: var(--rojo); }
+
+.chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px;
+        background: var(--gris-bg); color: var(--texto); margin: 1px 0; }
+.chip.rojo { background: var(--rojo-bg); color: var(--rojo); }
+.chip.verde { background: var(--verde-bg); color: var(--verde); }
+.chip.grande { font-size: 13px; padding: 3px 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.estado { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.estado-aprobada { background: var(--verde-bg); color: var(--verde); }
+.estado-pendiente { background: var(--ambar-bg); color: var(--ambar); }
+.estado-rechazada { background: var(--rojo-bg); color: var(--rojo); }
+.estado-reembolsada { background: #e0e7ff; color: #3730a3; }
+
+/* Barras de estado */
+.barra-fila { display: grid; grid-template-columns: 110px 1fr 40px; align-items: center; gap: 10px;
+              padding: 6px 0; color: inherit; }
+.barra-fila:hover { text-decoration: none; background: #f8fafc; }
+.barra-fila .nombre { font-size: 13px; font-weight: 600; }
+.barra-fila .num { text-align: right; font-variant-numeric: tabular-nums; }
+.pista { background: var(--gris-bg); height: 14px; border-radius: 4px; overflow: hidden; }
+.relleno { display: block; height: 100%; border-radius: 4px; }
+.relleno.estado-aprobada { background: #22c55e; } .relleno.estado-pendiente { background: #eab308; }
+.relleno.estado-rechazada { background: #ef4444; } .relleno.estado-reembolsada { background: #6366f1; }
+
+/* Filtros */
+.filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: end; }
+.filtros label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--tenue); }
+.filtros input, .filtros select { padding: 6px 8px; border: 1px solid var(--borde); border-radius: 6px;
+                                  font: inherit; color: var(--texto); background: #fff; }
+.filtros .ancho { grid-column: span 2; }
+.filtros .botones { display: flex; gap: 8px; }
+
+.paginacion { display: flex; justify-content: center; align-items: center; gap: 16px; }
+
+.aviso { background: var(--ambar-bg); color: #713f12; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; }
+.aviso.error { background: var(--rojo-bg); color: var(--rojo); }
+.aviso ul { margin: 4px 0 0; }

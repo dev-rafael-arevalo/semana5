@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block titulo %}Métricas{% endblock %}
+{% block contenido %}
+<div class="tarjetas">
+  <div class="tarjeta"><span class="etiqueta">Total procesadas</span><span class="valor">{{ m.total_procesadas }}</span></div>
+  <div class="tarjeta"><span class="etiqueta">Válidas</span><span class="valor txt-verde">{{ m.validas }}</span>
+    <span class="sub">{{ "%.1f"|format(m.porcentaje_validas) }} % del total</span></div>
+  <div class="tarjeta"><span class="etiqueta">Inválidas</span><span class="valor txt-rojo">{{ m.invalidas }}</span>
+    <span class="sub">política: {{ resultado.politica }}</span></div>
+  <div class="tarjeta"><span class="etiqueta">Monedas con movimiento</span><span class="valor">{{ m.totales_por_moneda|length }}</span></div>
+</div>
+
+<div class="rejilla">
+  <section class="panel">
+    <h2>Conteo por estado <small>(válidas)</small></h2>
+    {% for estado in estados %}
+      {% set cantidad = m.por_estado.get(estado, 0) %}
+      <a class="barra-fila" href="{{ url_for('transacciones', estado=estado) }}">
+        <span class="nombre">{{ estado }}</span>
+        <span class="pista"><span class="relleno estado-{{ estado|lower }}"
+              style="width: {{ (cantidad / maximo_estado * 100) if maximo_estado else 0 }}%"></span></span>
+        <span class="num">{{ cantidad }}</span>
+      </a>
+    {% endfor %}
+  </section>
+
+  <section class="panel">
+    <h2>Por fuente</h2>
+    <table>
+      <thead><tr><th>Fuente</th><th class="der">Válidas</th><th class="der">Inválidas</th></tr></thead>
+      <tbody>
+      {% for fuente, datos in m.por_fuente.items() %}
+        <tr>
+          <td>{% if fuente in reglas.fuentes %}<a href="{{ url_for('transacciones', fuente=fuente) }}">{{ fuente }}</a>{% else %}{{ fuente }}{% endif %}</td>
+          <td class="der">{{ datos.validas }}</td><td class="der txt-rojo">{{ datos.invalidas }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>Totales por moneda <small>(solo válidas, desglosado por estado)</small></h2>
+  <table>
+    <thead><tr><th>Moneda</th>{% for e in estados %}<th class="der">{{ e|capitalize }}</th>{% endfor %}<th class="der">Neto*</th></tr></thead>
+    <tbody>
+    {% for moneda, datos in m.totales_por_moneda.items() %}
+      <tr>
+        <td><a href="{{ url_for('transacciones', moneda=moneda) }}"><strong>{{ moneda }}</strong></a></td>
+        {% for e in estados %}<td class="der num-tab">{{ datos.por_estado.get(e, 0)|dinero }}</td>{% endfor %}
+        <td class="der num-tab"><strong>{{ datos.neto|dinero }}</strong></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="vacio">Sin transacciones válidas.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="nota">* Neto = aprobadas − reembolsadas. No se convierte entre monedas.</p>
+</section>
+
+{% if m.errores_frecuentes %}
+<section class="panel">
+  <h2>Motivos de invalidez</h2>
+  <div class="chips">
+    {% for error, cantidad in m.errores_frecuentes.items() %}
+      <span class="chip rojo grande">{{ error }} <b>{{ cantidad }}</b></span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

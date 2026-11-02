@@ -1,0 +1,40 @@
+# ── Python ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ── Entornos virtuales ───────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Pruebas y cobertura ──────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# ── Salidas generadas por el sistema ─────────────────
+# Archivos exportados desde la CLI (opción 6); se regeneran en cada ejecución
+salida/
+
+# ── Variables de entorno y secretos ──────────────────
+.env
+.env.*
+
+# ── Editores ─────────────────────────────────────────
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# ── Sistema operativo ────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,2 @@
+# Solo necesario para la interfaz web (web.py). La CLI (main.py) usa únicamente la librería estándar.
+flask>=3.0

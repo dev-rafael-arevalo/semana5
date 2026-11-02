@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Transacciones{% endblock %} · Explorador multifuente</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+<header class="barra">
+  <div class="marca">Explorador de transacciones</div>
+  <nav>
+    {% set actual = request.endpoint %}
+    <a href="{{ url_for('inicio') }}" class="{{ 'activo' if actual == 'inicio' }}">Métricas</a>
+    <a href="{{ url_for('transacciones') }}" class="{{ 'activo' if actual == 'transacciones' }}">Transacciones</a>
+    <a href="{{ url_for('invalidas') }}" class="{{ 'activo' if actual == 'invalidas' }}">Inválidas
+      <span class="chip rojo">{{ resultado.total_invalidas }}</span></a>
+    <a href="{{ url_for('ver_reglas') }}" class="{{ 'activo' if actual == 'ver_reglas' }}">Reglas</a>
+  </nav>
+  <form action="{{ url_for('buscar') }}" class="buscar">
+    <input name="id" placeholder="Buscar por ID…" aria-label="Buscar por ID" required>
+  </form>
+</header>
+
+<section class="estado-archivo">
+  <div>
+    <strong>{{ nombre_archivo }}</strong> ·
+    {{ resultado.total_procesadas }} procesadas ·
+    <span class="txt-verde">{{ resultado.validas|length }} válidas</span> ·
+    <span class="txt-rojo">{{ resultado.total_invalidas }} inválidas</span> ·
+    política: <code>{{ resultado.politica }}</code>
+  </div>
+  <div class="acciones">
+    <form action="{{ url_for('cargar') }}" method="post" enctype="multipart/form-data" class="cargar">
+      <input type="file" name="archivo" accept=".json,application/json" aria-label="Archivo JSON">
+      <button type="submit">Cargar JSON</button>
+    </form>
+    <a class="boton secundario" href="{{ url_for('exportar', formato='json') }}">Exportar JSON</a>
+    <a class="boton secundario" href="{{ url_for('exportar', formato='csv') }}">Exportar CSV</a>
+  </div>
+</section>
+
+<main>
+  {% for mensaje in get_flashed_messages() %}
+    <div class="aviso">{{ mensaje }}</div>
+  {% endfor %}
+  {% block contenido %}{% endblock %}
+</main>
+</body>
+</html>

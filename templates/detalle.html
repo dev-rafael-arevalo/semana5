@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}{{ tx.id or 'Sin ID' }}{% endblock %}
+{% block contenido %}
+<p><a href="javascript:history.back()">← Volver</a></p>
+<h1>Transacción {{ tx.id or '(sin ID)' }}
+  {% if tx.valida %}<span class="chip verde grande">VÁLIDA</span>{% else %}<span class="chip rojo grande">INVÁLIDA</span>{% endif %}
+</h1>
+
+{% if tx.errores %}
+<div class="aviso error"><strong>Errores:</strong>
+  {% for e in tx.errores %}<span class="chip rojo">{{ e }}</span> {% endfor %}</div>
+{% endif %}
+{% if tx.notas %}
+<div class="aviso"><strong>Notas de normalización:</strong>
+  <ul>{% for n in tx.notas %}<li>{{ n }}</li>{% endfor %}</ul></div>
+{% endif %}
+
+<div class="rejilla">
+  <section class="panel">
+    <h2>Registro original <small>({{ tx.fuente }})</small></h2>
+    <pre>{{ original }}</pre>
+  </section>
+  <section class="panel">
+    <h2>Registro normalizado</h2>
+    <pre>{{ normalizado }}</pre>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<h1>{{ titulo }} <small>{{ total }} de {{ total_sin_filtro }}</small></h1>
+
+<form class="filtros panel" method="get">
+  <label>Fuente
+    <select name="fuente"><option value="">Todas</option>
+      {% for f in reglas.fuentes %}<option {{ 'selected' if filtros.fuente == f }}>{{ f }}</option>{% endfor %}
+    </select></label>
+  <label>Estado
+    <select name="estado"><option value="">Todos</option>
+      {% for e in estados %}<option {{ 'selected' if filtros.estado == e }}>{{ e }}</option>{% endfor %}
+    </select></label>
+  <label>Moneda
+    <select name="moneda"><option value="">Todas</option>
+      {% for mo in reglas.monedas_soportadas %}<option {{ 'selected' if filtros.moneda == mo }}>{{ mo }}</option>{% endfor %}
+    </select></label>
+  <label>Desde <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde or '' }}"></label>
+  <label>Hasta <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta or '' }}"></label>
+  <label>Monto mín. <input type="number" step="0.01" name="monto_min" value="{{ filtros.monto_min if filtros.monto_min is not none else '' }}"></label>
+  <label>Monto máx. <input type="number" step="0.01" name="monto_max" value="{{ filtros.monto_max if filtros.monto_max is not none else '' }}"></label>
+  <label class="ancho">Texto <input type="search" name="texto" placeholder="id, cliente, descripción" value="{{ filtros.texto or '' }}"></label>
+  <label>Ordenar por
+    <select name="ordenar_por">
+      {% for o in ['fecha', 'monto', 'id'] %}<option {{ 'selected' if filtros.ordenar_por == o }}>{{ o }}</option>{% endfor %}
+    </select></label>
+  <label>Orden
+    <select name="orden">
+      <option value="asc">Ascendente</option>
+      <option value="desc" {{ 'selected' if filtros.descendente }}>Descendente</option>
+    </select></label>
+  <div class="botones">
+    <button type="submit">Aplicar filtros</button>
+    <a class="boton secundario" href="{{ url_for(endpoint) }}">Limpiar</a>
+  </div>
+</form>
+
+<div class="panel sin-relleno">
+<table class="tabla-datos">
+  <thead><tr>
+    <th>ID</th><th>Fuente</th><th>Fecha</th><th class="der">Monto</th><th>Moneda</th><th>Estado</th><th>Cliente</th>
+    {% if endpoint == 'invalidas' or resultado.politica == 'marcar' %}<th>Errores</th>{% endif %}
+  </tr></thead>
+  <tbody>
+  {% for indice, tx in filas %}
+    <tr class="{{ '' if tx.valida else 'fila-invalida' }}">
+      <td><a href="{{ url_for('detalle', indice=indice) }}">{{ tx.id or '—' }}</a></td>
+      <td><span class="chip">{{ tx.fuente }}</span></td>
+      <td class="num-tab">{{ tx.fecha.strftime('%Y-%m-%d %H:%M') if tx.fecha else '—' }}</td>
+      <td class="der num-tab">{{ tx.monto|dinero }}</td>
+      <td>{{ tx.moneda or '—' }}</td>
+      <td>{% if tx.estado %}<span class="estado estado-{{ tx.estado|lower }}">{{ tx.estado }}</span>{% else %}—{% endif %}</td>
+      <td class="recorte">{{ tx.cliente or '—' }}</td>
+      {% if endpoint == 'invalidas' or resultado.politica == 'marcar' %}
+        <td>{% for e in tx.errores %}<span class="chip rojo">{{ e }}</span> {% endfor %}</td>
+      {% endif %}
+    </tr>
+  {% else %}
+    <tr><td colspan="8" class="vacio">{{ vacio }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if total_paginas > 1 %}
+<nav class="paginacion">
+  {% if pagina > 1 %}<a class="boton secundario" href="{{ url_for(endpoint, pagina=pagina - 1, **args) }}">← Anterior</a>{% endif %}
+  <span>Página {{ pagina }} de {{ total_paginas }}</span>
+  {% if pagina < total_paginas %}<a class="boton secundario" href="{{ url_for(endpoint, pagina=pagina + 1, **args) }}">Siguiente →</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

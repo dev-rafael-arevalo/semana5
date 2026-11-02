@@ -1,0 +1,103 @@
+{
+  "_comentario": "Archivo de reglas del sistema. Todas las decisiones de normalización y validación viven aquí, no en el código.",
+  "version_reglas": "1.0",
+
+  "zona_horaria": {
+    "_comentario": "Las fechas sin zona horaria se asumen en hora de El Salvador (UTC-6). Todas se guardan convertidas a esta zona.",
+    "nombre": "America/El_Salvador",
+    "offset_horas": -6
+  },
+
+  "monedas_soportadas": ["USD", "EUR", "GTQ", "MXN"],
+
+  "alias_moneda": {
+    "_comentario": "Claves en minúscula. Se compara después de quitar espacios y pasar a minúscula.",
+    "usd": "USD", "$": "USD", "us$": "USD", "dolar": "USD", "dólar": "USD", "dolares": "USD", "dólares": "USD",
+    "eur": "EUR", "€": "EUR", "euro": "EUR", "euros": "EUR",
+    "gtq": "GTQ", "q": "GTQ", "quetzal": "GTQ", "quetzales": "GTQ",
+    "mxn": "MXN", "peso mexicano": "MXN", "pesos mexicanos": "MXN"
+  },
+
+  "mapeo_estados": {
+    "_comentario": "Estado normalizado -> lista de valores de origen equivalentes (en minúscula).",
+    "APROBADA":    ["approved", "success", "succeeded", "completed", "ok", "aprobada", "aprobado", "pagado", "paid", "00"],
+    "PENDIENTE":   ["pending", "processing", "en proceso", "pendiente", "en_revision", "hold"],
+    "RECHAZADA":   ["declined", "failed", "rejected", "rechazada", "rechazado", "denegada", "error", "05", "51"],
+    "REEMBOLSADA": ["refunded", "reversed", "reembolsada", "reembolsado", "revertida", "devuelto"]
+  },
+
+  "formatos_fecha": [
+    "%Y-%m-%dT%H:%M:%S%z",
+    "%Y-%m-%dT%H:%M:%S.%f%z",
+    "%Y-%m-%dT%H:%M:%S",
+    "%Y-%m-%d %H:%M:%S",
+    "%d/%m/%Y %H:%M:%S",
+    "%d/%m/%Y %H:%M",
+    "%d/%m/%Y",
+    "%d-%m-%Y",
+    "%Y-%m-%d"
+  ],
+  "aceptar_epoch": true,
+
+  "fuentes": {
+    "pasarela_web": {
+      "_comentario": "Pasarela de pagos en línea: montos en CENTAVOS (enteros), fechas ISO-8601, estados en inglés.",
+      "detectar_por": ["txn_id", "amount_cents"],
+      "campos": {
+        "id": "txn_id",
+        "fecha": "created_at",
+        "monto": "amount_cents",
+        "moneda": "currency",
+        "estado": "status",
+        "cliente": "customer.email",
+        "descripcion": "description"
+      },
+      "formato_monto": "centavos"
+    },
+    "banco": {
+      "_comentario": "Archivo bancario: montos como TEXTO con formato local (1.234,56), fechas dd/mm/aaaa.",
+      "detectar_por": ["referencia", "monto"],
+      "campos": {
+        "id": "referencia",
+        "fecha": "fecha_operacion",
+        "monto": "monto",
+        "moneda": "divisa",
+        "estado": "estado",
+        "cliente": "titular",
+        "descripcion": "concepto"
+      },
+      "formato_monto": "texto",
+      "separador_decimal": ",",
+      "separador_miles": "."
+    },
+    "pos_tienda": {
+      "_comentario": "Terminal punto de venta: montos decimales (número), fecha en epoch (segundos), estado con códigos.",
+      "detectar_por": ["ticket", "total"],
+      "campos": {
+        "id": "ticket",
+        "fecha": "timestamp",
+        "monto": "total",
+        "moneda": "moneda",
+        "estado": "codigo_respuesta",
+        "cliente": "terminal",
+        "descripcion": "sucursal"
+      },
+      "formato_monto": "decimal"
+    }
+  },
+
+  "validacion": {
+    "_comentario": "Criterios de validez. Una transacción con al menos un error es INVÁLIDA.",
+    "campos_obligatorios": ["id", "fecha", "monto", "moneda", "estado"],
+    "monto_minimo": 0.01,
+    "monto_maximo": 50000.00,
+    "permitir_fecha_futura": false,
+    "fecha_minima": "2020-01-01",
+    "detectar_duplicados": true
+  },
+
+  "politica_invalidas": {
+    "_comentario": "Opciones: 'separar' (se guardan aparte con sus motivos), 'marcar' (quedan en la lista principal con valida=false), 'descartar' (se eliminan, solo se cuentan).",
+    "accion": "separar"
+  }
+}

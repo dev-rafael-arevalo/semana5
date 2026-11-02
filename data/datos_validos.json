@@ -1,0 +1,16 @@
+[
+  {"txn_id": "PW-1001", "amount_cents": 2599, "currency": "usd", "status": "succeeded", "created_at": "2026-10-02T14:30:00Z", "customer": {"email": "ana.lopez@correo.com"}, "description": "Suscripción mensual"},
+  {"txn_id": "PW-1002", "amount_cents": 150000, "currency": "USD", "status": "pending", "created_at": "2026-10-05T09:12:45-06:00", "customer": {"email": "carlos.m@correo.com"}, "description": "Laptop"},
+  {"txn_id": "PW-1003", "amount_cents": 4999, "currency": "eur", "status": "refunded", "created_at": "2026-10-09T20:00:00.000+01:00", "customer": {"email": "lucia@correo.es"}, "description": "Curso en línea"},
+  {"txn_id": "PW-1004", "amount_cents": 899, "currency": "USD", "status": "declined", "created_at": "2026-10-15T10:05:00Z", "customer": {"email": "jorge.r@correo.com"}, "description": "Ebook"},
+
+  {"referencia": "BN-55001", "monto": "1.250,75", "divisa": "Dólares", "estado": "Aprobado", "fecha_operacion": "03/10/2026 08:45", "titular": "María Hernández", "concepto": "Transferencia recibida"},
+  {"referencia": "BN-55002", "monto": "320,00", "divisa": "$", "estado": "EN PROCESO", "fecha_operacion": "11/10/2026", "titular": "José Martínez", "concepto": "Pago de servicios"},
+  {"referencia": "BN-55003", "monto": "Q 2.100,50", "divisa": "GTQ", "estado": "aprobada", "fecha_operacion": "18-10-2026", "titular": "Distribuidora Maya", "concepto": "Pago proveedor Guatemala"},
+  {"referencia": "BN-55004", "monto": "75,25", "divisa": "USD", "estado": "Revertida", "fecha_operacion": "21/10/2026 17:30:00", "titular": "Pedro Ayala", "concepto": "Reverso de cargo"},
+
+  {"ticket": "POS-9001", "total": 12.5, "moneda": "USD", "codigo_respuesta": "00", "timestamp": 1791040500, "terminal": "TERM-01", "sucursal": "San Salvador Centro"},
+  {"ticket": "POS-9002", "total": "45.90", "moneda": "usd", "codigo_respuesta": "00", "timestamp": 1791488400, "terminal": "TERM-02", "sucursal": "Santa Tecla"},
+  {"ticket": "POS-9003", "total": 210, "moneda": "MXN", "codigo_respuesta": "05", "timestamp": "1791849900", "terminal": "TERM-01", "sucursal": "San Salvador Centro"},
+  {"ticket": "POS-9004", "total": 8.75, "moneda": "USD", "codigo_respuesta": "00", "timestamp": 1792516920, "terminal": "TERM-03", "sucursal": "San Miguel"}
+]

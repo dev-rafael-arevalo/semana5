@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}Reglas{% endblock %}
+{% block contenido %}
+<h1>Reglas activas <small>config/reglas.json</small></h1>
+
+<div class="rejilla">
+  <section class="panel">
+    <h2>Mapeo de estados</h2>
+    <table>
+      {% for estado, valores in reglas.mapeo_estados.items() %}
+        <tr><td><span class="estado estado-{{ estado|lower }}">{{ estado }}</span></td>
+            <td>{% for v in valores %}<code>{{ v }}</code> {% endfor %}</td></tr>
+      {% endfor %}
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Monedas</h2>
+    <p>Soportadas: {% for m in reglas.monedas_soportadas %}<span class="chip verde">{{ m }}</span> {% endfor %}</p>
+    <table>
+      <thead><tr><th>Alias de origen</th><th>Código</th></tr></thead>
+      {% for alias, codigo in reglas.alias_moneda.items() %}
+        <tr><td><code>{{ alias }}</code></td><td>{{ codigo }}</td></tr>
+      {% endfor %}
+    </table>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>Fuentes</h2>
+  <table>
+    <thead><tr><th>Fuente</th><th>Se detecta por</th><th>Formato de monto</th><th>Mapeo de campos</th></tr></thead>
+    {% for nombre, d in reglas.fuentes.items() %}
+      <tr><td><strong>{{ nombre }}</strong></td>
+          <td>{% for c in d.detectar_por %}<code>{{ c }}</code> {% endfor %}</td>
+          <td>{{ d.formato_monto }}{% if d.separador_decimal %} (decimal «{{ d.separador_decimal }}», miles «{{ d.separador_miles }}»){% endif %}</td>
+          <td class="pequeno">{% for destino, origen in d.campos.items() %}{{ destino }} ← <code>{{ origen }}</code><br>{% endfor %}</td></tr>
+    {% endfor %}
+  </table>
+</section>
+
+<div class="rejilla">
+  <section class="panel">
+    <h2>Fechas</h2>
+    <p>Zona horaria: <strong>{{ reglas.zona_horaria.nombre }}</strong> (UTC{{ '%+d'|format(reglas.zona_horaria.offset_horas) }}).
+       Epoch aceptado: {{ 'sí' if reglas.aceptar_epoch else 'no' }}.</p>
+    <ul>{% for f in reglas.formatos_fecha %}<li><code>{{ f }}</code></li>{% endfor %}</ul>
+  </section>
+  <section class="panel">
+    <h2>Validación</h2>
+    {% set v = reglas.validacion %}
+    <ul>
+      <li>Campos obligatorios: {% for c in v.campos_obligatorios %}<code>{{ c }}</code> {% endfor %}</li>
+      <li>Monto entre <strong>{{ v.monto_minimo }}</strong> y <strong>{{ v.monto_maximo }}</strong></li>
+      <li>Fecha mínima: <strong>{{ v.fecha_minima }}</strong>; fechas futuras: {{ 'permitidas' if v.permitir_fecha_futura else 'no permitidas' }}</li>
+      <li>Detectar duplicados: {{ 'sí' if v.detectar_duplicados else 'no' }}</li>
+      <li>Política para inválidas: <code>{{ reglas.politica_invalidas.accion }}</code></li>
+    </ul>
+  </section>
+</div>
+{% endblock %}
